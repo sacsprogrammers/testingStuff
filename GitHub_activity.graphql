@@ -4,15 +4,6 @@ query {
     __typename
     ... on Organization {
       name
-      repositories(first: 100) {
-        totalCount
-        totalDiskUsage
-        edges {
-          repository: node {
-            name
-          }
-        }
-      }
       auditLog(first: 7) {
         totalCount
         edges {
