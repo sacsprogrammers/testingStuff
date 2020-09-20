@@ -44,8 +44,13 @@ def json_to_dataframe(data_in):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer db9729013344667f3241b6e6a2ee8bb87f22c910"}
+headers = {"Authorization": "Bearer b360d5435aa99a10298898e66cbbafb4a50890ee"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
+
+#Use to Capture a snapshot of results while token still working
+#text_file = open("sampleresults.json", "w")
+#n = text_file.write(r.text)
+#text_file.close()
 
 json_data = json.loads(r.text)
 print(json_data)

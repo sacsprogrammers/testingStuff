@@ -4,7 +4,7 @@ query {
     __typename
     ... on Organization {
       name
-      auditLog(first: 7) {
+      auditLog(first: 100) {
         totalCount
         edges {
           cursor
