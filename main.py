@@ -44,18 +44,27 @@ def json_to_dataframe(data_in):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer b360d5435aa99a10298898e66cbbafb4a50890ee"}
+headers = {"Authorization": "Bearer 575ef979a190d1dc76b4efb6a26efe5e60dfba9b"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
+#print(r.text)
 
 #Use to Capture a snapshot of results while token still working
 #text_file = open("sampleresults.json", "w")
-#n = text_file.write(r.text)
+#text_file.write(r.text)
 #text_file.close()
 
 json_data = json.loads(r.text)
 print(json_data)
+if "Bad credentials" in r.text:
+  print("============Replaced with")
+  r = read_file("sampleresults.json")
+  json_data = json.loads(r)
+  print(json_data)
+else:
+  print("============query worked")
+  
 AJ_data = json_data['data']['nodes']
 spreadsheet = json_to_dataframe(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet3.csv')
+spreadsheet.to_csv('test_Pandaspreadsheet4.csv')
 print(spreadsheet)
 
