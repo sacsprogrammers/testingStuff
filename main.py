@@ -1,54 +1,56 @@
 import requests
 import json
 import xlsxwriter
-import pandas as pd
-
-counter = 0
+from copy import deepcopy
+import pandas
 
 def read_file(filename):
   return open(str(filename), 'r').read()
 
+def cross_join(left, right):
+    new_rows = []
+    for left_row in left:
+        for right_row in right:
+            temp_row = deepcopy(left_row)
+            for key, value in right_row.items():
+                temp_row[key] = value
+            new_rows.append(deepcopy(temp_row))
+    return new_rows
+
+
+def flatten_list(data):
+    for elem in data:
+        if isinstance(elem, list):
+            yield from flatten_list(elem)
+        else:
+            yield elem
+
+
+def json_to_dataframe(data_in):
+    def flatten_json(data, prev_heading=''):
+        if isinstance(data, dict):
+            rows = [{}]
+            for key, value in data.items():
+                rows = cross_join(rows, flatten_json(value, prev_heading + '.' + key))
+        elif isinstance(data, list):
+            rows = []
+            for i in range(len(data)):
+                [rows.append(elem) for elem in flatten_list(flatten_json(data[i], prev_heading))]
+        else:
+            rows = [{prev_heading[1:]: data}]
+        return rows
+
+    return pandas.DataFrame(flatten_json(data_in))
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer b50175877fc56819b6f545a17f33954539522c02"}
+headers = {"Authorization": "Bearer 3b477ada5a779a8b8567861418ae57e19d68b53f"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
 
 json_data = json.loads(r.text)
 print(json_data)
 AJ_data = json_data['data']['nodes']
 print(AJ_data)
-while counter < 4:
-  spreadsheet = pd.json_normalize(AJ_data)
-  counter = counter + 1
-spreadsheet.to_csv('test_Pandaspreadsheet1.csv')
-
-
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('Expenses02.xlsx')
-worksheet = workbook.add_worksheet()
-
-# Some data we want to write to the worksheet.
-expenses = (
-    ['Rent', 1000],
-    ['Gas',   100],
-    ['Food',  300],
-    ['Gym',    50],
-)
-
-# Start from the first cell. Rows and columns are zero indexed.
-row = 0
-col = 0
-
-# Iterate over the data and write it out row by row.
-for item, cost in (expenses):
-    worksheet.write(row, col,     item)
-    worksheet.write(row, col + 1, cost)
-    row += 1
-
-# Write a total using a formula.
-worksheet.write(row, 0, 'Total')
-worksheet.write(row, 1, '=SUM(B1:B4)')
-
-workbook.close()
+spreadsheet = json_to_dataframe(AJ_data)
+spreadsheet.to_csv('test_Pandaspreadsheet2.csv')
 
