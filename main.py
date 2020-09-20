@@ -10,15 +10,15 @@ def read_file(filename):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 7587e8554c45cc68a2740c2d485c80404af2c8c4"}
+headers = {"Authorization": "Bearer 477a619c6196e10b90d8ae712312b13c1c8c9672"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
-print(json_query)
 
 json_data = json.loads(r.text)
 print(json_data)
 AJ_data = json_data['data']['nodes']
-spreadsheet = pd.DataFrame(AJ_data)
-spreadsheet.to_csv('test_spreadsheet.csv')
+print(AJ_data)
+spreadsheet = pd.json_normalize(AJ_data)
+spreadsheet.to_csv('test_Pandaspreadsheet.csv')
 
 
 # Create a workbook and add a worksheet.

@@ -1,4 +1,3 @@
-#"MDEyOk9yZ2FuaXphdGlvbjcwODc2MjE5"
 query {
   nodes(ids: ["MDEyOk9yZ2FuaXphdGlvbjcwODc1OTk2"]) {
     id
