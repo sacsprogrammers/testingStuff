@@ -3,6 +3,7 @@ import json
 import xlsxwriter
 import pandas as pd
 
+counter = 0
 
 def read_file(filename):
   return open(str(filename), 'r').read()
@@ -10,15 +11,17 @@ def read_file(filename):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 477a619c6196e10b90d8ae712312b13c1c8c9672"}
+headers = {"Authorization": "Bearer b50175877fc56819b6f545a17f33954539522c02"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
 
 json_data = json.loads(r.text)
 print(json_data)
 AJ_data = json_data['data']['nodes']
 print(AJ_data)
-spreadsheet = pd.json_normalize(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet.csv')
+while counter < 4:
+  spreadsheet = pd.json_normalize(AJ_data)
+  counter = counter + 1
+spreadsheet.to_csv('test_Pandaspreadsheet1.csv')
 
 
 # Create a workbook and add a worksheet.
