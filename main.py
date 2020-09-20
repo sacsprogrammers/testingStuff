@@ -44,9 +44,8 @@ def json_to_dataframe(data_in):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-#headers = {"Authorization": "Bearer 3b477ada5a779a8b8567861418ae57e19d68b53f"}
-#r = requests.post(url, json={'query': json_query}, headers=headers)
-r = requests.post(url, json={'query': json_query})
+headers = {"Authorization": "Bearer 3b477ada5a779a8b8567861418ae57e19d68b53f"}
+r = requests.post(url, json={'query': json_query}, headers=headers)
 
 json_data = json.loads(r.text)
 print(json_data)
