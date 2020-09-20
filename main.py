@@ -1,22 +1,25 @@
 import requests
 import json
 import xlsxwriter
+import pandas as pd
 
 
 def read_file(filename):
   return open(str(filename), 'r').read()
 
-"""
+
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 1b5cf4050ba63218bf99ee2b1a36cbb7c7f31cca"}
+headers = {"Authorization": "Bearer 7587e8554c45cc68a2740c2d485c80404af2c8c4"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
-#print(json_query)
+print(json_query)
 
 json_data = json.loads(r.text)
+print(json_data)
 AJ_data = json_data['data']['nodes']
-print(AJ_data)
-"""
+spreadsheet = pd.DataFrame(AJ_data)
+spreadsheet.to_csv('test_spreadsheet.csv')
+
 
 # Create a workbook and add a worksheet.
 workbook = xlsxwriter.Workbook('Expenses02.xlsx')
