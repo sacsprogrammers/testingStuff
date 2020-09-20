@@ -44,13 +44,13 @@ def json_to_dataframe(data_in):
 
 json_query = read_file("GitHub_activity.graphql")
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 3b477ada5a779a8b8567861418ae57e19d68b53f"}
+headers = {"Authorization": "Bearer db9729013344667f3241b6e6a2ee8bb87f22c910"}
 r = requests.post(url, json={'query': json_query}, headers=headers)
 
 json_data = json.loads(r.text)
 print(json_data)
 AJ_data = json_data['data']['nodes']
 spreadsheet = json_to_dataframe(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet2.csv')
+spreadsheet.to_csv('test_Pandaspreadsheet3.csv')
 print(spreadsheet)
 
