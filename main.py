@@ -38,7 +38,8 @@ def json_to_dataframe(data_in):
                 [rows.append(elem) for elem in flatten_list(flatten_json(data[i], prev_heading))]
         else:
             filter_heading = prev_heading.rindex('.')
-            rows = [{prev_heading[filter_heading + 1:]: data}]
+            short_header = prev_heading[filter_heading + 1:]
+            rows = [{short_header: data}]
         return rows
 
     return pandas.DataFrame(flatten_json(data_in))
@@ -66,7 +67,7 @@ else:
   
 AJ_data = json_data['data']['nodes']
 spreadsheet = json_to_dataframe(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet5.csv')
+spreadsheet.to_csv('test_Pandaspreadsheet6.csv')
 print(spreadsheet)
 
 #.rsplit('.', -1)[0]
