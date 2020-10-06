@@ -25,6 +25,20 @@ def flatten_list(data):
         else:
             yield elem
 
+def insert_space(word, index):
+  return word[:index].capitalize() + ' ' + word[index:]
+
+def clean_headers(prev_heading):
+  filter_heading = prev_heading.rindex('.')
+  prev_heading = prev_heading[filter_heading + 1:]
+  for i in prev_heading:
+    if i.isupper() == True:
+      num = prev_heading.index(i)
+      prev_heading = insert_space(prev_heading, num)
+  if prev_heading.find(' ') == -1:
+    prev_heading = prev_heading.capitalize()
+  print(prev_heading)
+  return prev_heading
 
 def json_to_dataframe(data_in):
     def flatten_json(data, prev_heading=''):
@@ -37,9 +51,8 @@ def json_to_dataframe(data_in):
             for i in range(len(data)):
                 [rows.append(elem) for elem in flatten_list(flatten_json(data[i], prev_heading))]
         else:
-            filter_heading = prev_heading.rindex('.')
-            short_header = prev_heading[filter_heading + 1:]
-            rows = [{short_header: data}]
+            prev_heading = clean_headers(prev_heading)
+            rows = [{prev_heading: data}]
         return rows
 
     return pandas.DataFrame(flatten_json(data_in))
