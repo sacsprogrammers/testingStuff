@@ -1,4 +1,4 @@
-,Id,__typename,Name,Total Count,Cursor,Action,Created At,Organization Name,Member Details,Category,Login,Email,End Cursor,Has next Page,Repository Name
+,Id,__typename,Name,Total Count,Cursor,Action,Created At,Organization Name,Member Details,Category,Login,Email,End Cursor,Has Next Page,Repository Name
 0,MDEyOk9yZ2FuaXphdGlvbjcwODc1OTk2,Organization,,7,Y3Vyc29yOjE=,org.disable_oauth_app_restrictions,2020-09-20T05:12:44.167Z,sacsprogrammers,,User,pizzeman,,Y3Vyc29yOjc=,False,
 1,MDEyOk9yZ2FuaXphdGlvbjcwODc1OTk2,Organization,,7,Y3Vyc29yOjI=,repo.create,2020-09-20T05:00:32.182Z,sacsprogrammers,,User,pizzeman,,Y3Vyc29yOjc=,False,sacsprogrammers/testingStuff
 2,MDEyOk9yZ2FuaXphdGlvbjcwODc1OTk2,Organization,,7,Y3Vyc29yOjM=,repo.create,2020-09-07T05:07:04.373Z,sacsprogrammers,,User,pizzeman,,Y3Vyc29yOjc=,False,sacsprogrammers/secondRepository

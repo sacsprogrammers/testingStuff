@@ -26,7 +26,10 @@ def flatten_list(data):
             yield elem
 
 def insert_space(word, index):
-  return word[:index].capitalize() + ' ' + word[index:]
+  return word[:index] + ' ' + word[index:]
+
+def capitalize_headers(headers):
+  return headers[:1].capitalize() + headers[1:]
 
 def clean_headers(prev_heading):
   filter_heading = prev_heading.rindex('.')
@@ -35,8 +38,7 @@ def clean_headers(prev_heading):
     if i.isupper() == True:
       num = prev_heading.index(i)
       prev_heading = insert_space(prev_heading, num)
-  if prev_heading.find(' ') == -1:
-    prev_heading = prev_heading.capitalize()
+  prev_heading = capitalize_headers(prev_heading)
   print(prev_heading)
   return prev_heading
 
@@ -51,6 +53,7 @@ def json_to_dataframe(data_in):
             for i in range(len(data)):
                 [rows.append(elem) for elem in flatten_list(flatten_json(data[i], prev_heading))]
         else:
+            #print(prev_heading)
             prev_heading = clean_headers(prev_heading)
             rows = [{prev_heading: data}]
         return rows
