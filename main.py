@@ -1,6 +1,5 @@
 import requests
 import json
-import xlsxwriter
 from copy import deepcopy
 import pandas
 
@@ -39,7 +38,6 @@ def clean_headers(prev_heading):
       num = prev_heading.index(i)
       prev_heading = insert_space(prev_heading, num)
   prev_heading = capitalize_headers(prev_heading)
-  print(prev_heading)
   return prev_heading
 
 def json_to_dataframe(data_in):
@@ -53,7 +51,6 @@ def json_to_dataframe(data_in):
             for i in range(len(data)):
                 [rows.append(elem) for elem in flatten_list(flatten_json(data[i], prev_heading))]
         else:
-            #print(prev_heading)
             prev_heading = clean_headers(prev_heading)
             rows = [{prev_heading: data}]
         return rows
@@ -83,7 +80,5 @@ else:
   
 AJ_data = json_data['data']['nodes']
 spreadsheet = json_to_dataframe(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet6.csv')
+spreadsheet.to_csv('test_Pandaspreadsheet7.csv')
 print(spreadsheet)
-
-#.rsplit('.', -1)[0]

@@ -6,7 +6,7 @@ import json
 
 #authentication token = 1b5cf4050ba63218bf99ee2b1a36cbb7c7f31cca
 
-"""
+
 logCursor = 'MDEyOk9yZ2FuaXphdGlvbjcwODc1OTk2'
 auth_token = '03abaa8b82490d88a7a0e4d41f3970356a396274'
 
@@ -35,7 +35,7 @@ def read_file(filename):
 gitHub_query = read_file("GitHub_activity.graphql").replace('\n','').replace('\t','')
 result = run_query(gitHub_query, logCursor)
 print(result)
-"""
+
 
 
 #testing connection
@@ -108,7 +108,7 @@ r = requests.post(url, json={'query': query})
 print(r.status_code)
 print(r.text)
 
-"""
+
 #transform into json
 json_data = json.loads(r.text)
 
@@ -116,7 +116,7 @@ json_data = json.loads(r.text)
 df_data = json_data[‘data’][‘organisations’][‘edges’]
 df = pd.DataFrame(df_data)
 print(df)
-"""
+
 
 
 
