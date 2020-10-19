@@ -59,7 +59,7 @@ def json_to_dataframe(data_in):
     return pandas.DataFrame(flatten_json(data_in))
 
 
-cursor = 	"Y3Vyc29yOjE="
+cursor = 	'Y3Vyc29yOjI='
 has_next_page = True
 final = pandas.DataFrame()
 
@@ -67,7 +67,7 @@ while has_next_page == True:
   json_query = read_file("GitHub_activity.graphql")
   queryTemplate = Template(json_query)
   url = 'https://api.github.com/graphql'
-  headers = {"Authorization": "Bearer 92a9b3ed97ce3c375a2d6c69e477520fcd0ee67b"}
+  headers = {"Authorization": "Bearer 97a35b30e4725fea7a5fa209e69acfaf1bd1f133"}
   json_query = json_query.replace("MYCURSOR", cursor)
   r = requests.post(url, json={'query': json_query}, headers=headers)
 
@@ -83,8 +83,11 @@ while has_next_page == True:
   AJ_data = json_data['data']['nodes']
   spreadsheet = json_to_dataframe(AJ_data)
   print(spreadsheet)
-  final = final.append(spreadsheet)
-  has_next_page = spreadsheet.iloc[1]['Has Next Page']
-  cursor = spreadsheet.iloc[1]['Cursor']
-final.to_csv('test_Pandaspreadsheet10.csv')
+  final = final.append(spreadsheet, ignore_index=True)
+  if len(spreadsheet.index) == 3:
+    has_next_page = spreadsheet.iloc[2]['Has Next Page']
+    cursor = spreadsheet.iloc[2]['Cursor']
+  else:
+    has_next_page = False
+final.to_csv('test_Pandaspreadsheet11.csv')
 print(final)
