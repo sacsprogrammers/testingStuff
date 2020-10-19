@@ -2,6 +2,7 @@ import requests
 import json
 from copy import deepcopy
 import pandas
+from string import Template
 
 def read_file(filename):
   return open(str(filename), 'r').read()
@@ -57,28 +58,31 @@ def json_to_dataframe(data_in):
 
     return pandas.DataFrame(flatten_json(data_in))
 
-json_query = read_file("GitHub_activity.graphql")
-url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 575ef979a190d1dc76b4efb6a26efe5e60dfba9b"}
-r = requests.post(url, json={'query': json_query}, headers=headers)
-#print(r.text)
 
-#Use to Capture a snapshot of results while token still working
-#text_file = open("sampleresults.json", "w")
-#text_file.write(r.text)
-#text_file.close()
+cursor = 	"Y3Vyc29yOjE="
+has_next_page = True
 
-json_data = json.loads(r.text)
-print(json_data)
-if "Bad credentials" in r.text:
-  print("============Replaced with")
-  r = read_file("sampleresults.json")
-  json_data = json.loads(r)
+while has_next_page == True:
+  json_query = read_file("GitHub_activity.graphql")
+  queryTemplate = Template(json_query)
+  url = 'https://api.github.com/graphql'
+  headers = {"Authorization": "Bearer e24d0dbb99949e7212c74a008df4b225e7acbb8a"}
+  json_query = json_query.replace("MYCURSOR", cursor)
+  r = requests.post(url, json={'query': json_query}, headers=headers)
+
+  json_data = json.loads(r.text)
   print(json_data)
-else:
-  print("============query worked")
+  if "Bad credentials" in r.text:
+    print("============Replaced with")
+    r = read_file("sampleresults.json")
+    json_data = json.loads(r)
+    print(json_data)
+  else:
+    print("============query worked")
   
-AJ_data = json_data['data']['nodes']
-spreadsheet = json_to_dataframe(AJ_data)
-spreadsheet.to_csv('test_Pandaspreadsheet8.csv')
-print(spreadsheet)
+  AJ_data = json_data['data']['nodes']
+  spreadsheet = json_to_dataframe(AJ_data)
+  spreadsheet.to_csv('test_Pandaspreadsheet9.csv')
+  has_next_page = spreadsheet.iloc[2]['Has Next Page']
+  cursor = spreadsheet.iloc[2]['Cursor']
+#print(spreadsheet)

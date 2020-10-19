@@ -4,14 +4,14 @@ query {
     __typename
     ... on Organization {
       name
-      auditLog(first: 3) {
+      auditLog(first: 3, after: "MYCURSOR") {
         totalCount
         edges {
-          #cursor
+          cursor
           AuditEntry: node {
             ... on AuditEntry {
               action
-              #createdAt
+              createdAt
               ... on TeamAuditEntryData {
                 teamName
               }
@@ -19,7 +19,7 @@ query {
                 repositoryName
               }
               ... on OrganizationAuditEntryData {
-                #organizationName
+                organizationName
               }
               memberDetails: user {
                 name
@@ -28,7 +28,7 @@ query {
               actor {
                 category: __typename
                 ... on User {
-                  #login
+                  login
                   email
                   name
                 }
@@ -37,8 +37,8 @@ query {
           }
         }
         pageInfo {
-          #endCursor
-          #hasNextPage
+          endCursor
+          hasNextPage
         }
       }
     }
