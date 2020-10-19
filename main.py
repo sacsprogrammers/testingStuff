@@ -61,17 +61,17 @@ def json_to_dataframe(data_in):
 
 cursor = 	"Y3Vyc29yOjE="
 has_next_page = True
+final = pandas.DataFrame()
 
 while has_next_page == True:
   json_query = read_file("GitHub_activity.graphql")
   queryTemplate = Template(json_query)
   url = 'https://api.github.com/graphql'
-  headers = {"Authorization": "Bearer e24d0dbb99949e7212c74a008df4b225e7acbb8a"}
+  headers = {"Authorization": "Bearer 92a9b3ed97ce3c375a2d6c69e477520fcd0ee67b"}
   json_query = json_query.replace("MYCURSOR", cursor)
   r = requests.post(url, json={'query': json_query}, headers=headers)
 
   json_data = json.loads(r.text)
-  print(json_data)
   if "Bad credentials" in r.text:
     print("============Replaced with")
     r = read_file("sampleresults.json")
@@ -82,7 +82,9 @@ while has_next_page == True:
   
   AJ_data = json_data['data']['nodes']
   spreadsheet = json_to_dataframe(AJ_data)
-  spreadsheet.to_csv('test_Pandaspreadsheet9.csv')
-  has_next_page = spreadsheet.iloc[2]['Has Next Page']
-  cursor = spreadsheet.iloc[2]['Cursor']
-#print(spreadsheet)
+  print(spreadsheet)
+  final = final.append(spreadsheet)
+  has_next_page = spreadsheet.iloc[1]['Has Next Page']
+  cursor = spreadsheet.iloc[1]['Cursor']
+final.to_csv('test_Pandaspreadsheet10.csv')
+print(final)
