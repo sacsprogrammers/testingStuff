@@ -67,7 +67,7 @@ final = pandas.DataFrame()
 json_query = read_file("GitHub_activity.graphql")
 queryTemplate = Template(json_query)
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 93cf128d85af25b33c875239b80f4ac833e26bd4"}
+headers = {"Authorization": "Bearer b0405d3e1887e0c3396c7ce6dd4fd6858a4cbe5f"}
 queryTemplate = queryTemplate.substitute(MYCURSOR=cursor)
 r = requests.post(url, json={'query': queryTemplate}, headers=headers)
 
@@ -88,7 +88,9 @@ has_next_page = spreadsheet.iloc[0]['Has Next Page']
 cursor = spreadsheet.iloc[0]['Cursor']
 
 while has_next_page == True:
-  print(f'\"{cursor}\"')
+  json_query = read_file("GitHub_activity.graphql")
+  url = 'https://api.github.com/graphql'
+  headers = {"Authorization": "Bearer b0405d3e1887e0c3396c7ce6dd4fd6858a4cbe5f"}
   json_query = json_query.replace("$MYCURSOR", f'\"{cursor}\"')
   r = requests.post(url, json={'query': json_query}, headers=headers)
 
@@ -105,9 +107,9 @@ while has_next_page == True:
   print(spreadsheet)
   final = final.append(spreadsheet, ignore_index=True)
   print(final)
-  if len(spreadsheet.index) == 1:
-    has_next_page = spreadsheet.iloc[0]['Has Next Page']
-    cursor = spreadsheet.iloc[0]['Cursor']
+  if len(spreadsheet.index) == 3:
+    has_next_page = spreadsheet.iloc[2]['Has Next Page']
+    cursor = spreadsheet.iloc[2]['Cursor']
   else:
     has_next_page = False
   
