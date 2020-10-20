@@ -4,7 +4,7 @@ query {
     __typename
     ... on Organization {
       name
-      auditLog(first: 3, after: "MYCURSOR") {
+      auditLog(first: 1, after: $MYCURSOR) {
         totalCount
         edges {
           cursor

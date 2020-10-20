@@ -59,16 +59,37 @@ def json_to_dataframe(data_in):
     return pandas.DataFrame(flatten_json(data_in))
 
 
-cursor = 	'Y3Vyc29yOjI='
+cursor = 	"null"
 has_next_page = True
 final = pandas.DataFrame()
 
+
+json_query = read_file("GitHub_activity.graphql")
+queryTemplate = Template(json_query)
+url = 'https://api.github.com/graphql'
+headers = {"Authorization": "Bearer f4d9cbd066d7a820c453f9a31b090247b42202a5"}
+queryTemplate = queryTemplate.substitute(MYCURSOR=cursor)
+r = requests.post(url, json={'query': queryTemplate}, headers=headers)
+
+json_data = json.loads(r.text)
+if "Bad credentials" in r.text:
+  print("============Replaced with")
+  r = read_file("sampleresults.json")
+  json_data = json.loads(r)
+  print(json_data)
+else:
+  print("============query worked")
+  
+AJ_data = json_data['data']['nodes']
+spreadsheet = json_to_dataframe(AJ_data)
+print(spreadsheet)
+final = final.append(spreadsheet, ignore_index=True)
+has_next_page = spreadsheet.iloc[0]['Has Next Page']
+cursor = spreadsheet.iloc[0]['Cursor']
+
 while has_next_page == True:
-  json_query = read_file("GitHub_activity.graphql")
-  queryTemplate = Template(json_query)
-  url = 'https://api.github.com/graphql'
-  headers = {"Authorization": "Bearer 97a35b30e4725fea7a5fa209e69acfaf1bd1f133"}
-  json_query = json_query.replace("MYCURSOR", cursor)
+  print(f'\"{cursor}\"')
+  json_query = json_query.replace("$MYCURSOR", f'\"{cursor}\"')
   r = requests.post(url, json={'query': json_query}, headers=headers)
 
   json_data = json.loads(r.text)
@@ -76,7 +97,6 @@ while has_next_page == True:
     print("============Replaced with")
     r = read_file("sampleresults.json")
     json_data = json.loads(r)
-    print(json_data)
   else:
     print("============query worked")
   
@@ -84,9 +104,11 @@ while has_next_page == True:
   spreadsheet = json_to_dataframe(AJ_data)
   print(spreadsheet)
   final = final.append(spreadsheet, ignore_index=True)
-  if len(spreadsheet.index) == 3:
-    has_next_page = spreadsheet.iloc[2]['Has Next Page']
-    cursor = spreadsheet.iloc[2]['Cursor']
+  print(final)
+  if len(spreadsheet.index) == 1:
+    has_next_page = spreadsheet.iloc[0]['Has Next Page']
+    cursor = spreadsheet.iloc[0]['Cursor']
+    print("Here")
   else:
     has_next_page = False
 final.to_csv('test_Pandaspreadsheet11.csv')
