@@ -67,7 +67,7 @@ final = pandas.DataFrame()
 json_query = read_file("GitHub_activity.graphql")
 queryTemplate = Template(json_query)
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer f4d9cbd066d7a820c453f9a31b090247b42202a5"}
+headers = {"Authorization": "Bearer 93cf128d85af25b33c875239b80f4ac833e26bd4"}
 queryTemplate = queryTemplate.substitute(MYCURSOR=cursor)
 r = requests.post(url, json={'query': queryTemplate}, headers=headers)
 
@@ -108,8 +108,11 @@ while has_next_page == True:
   if len(spreadsheet.index) == 1:
     has_next_page = spreadsheet.iloc[0]['Has Next Page']
     cursor = spreadsheet.iloc[0]['Cursor']
-    print("Here")
   else:
     has_next_page = False
-final.to_csv('test_Pandaspreadsheet11.csv')
+  
+  if len(final.index) > 10:
+    has_next_page = False
+    print("=======HERERERERERER")
+final.to_csv('test_Pandaspreadsheet12.csv')
 print(final)
