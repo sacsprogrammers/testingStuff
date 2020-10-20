@@ -67,7 +67,7 @@ final = pandas.DataFrame()
 json_query = read_file("GitHub_activity.graphql")
 queryTemplate = Template(json_query)
 url = 'https://api.github.com/graphql'
-headers = {"Authorization": "Bearer 066e495c532454a7a2cabc98d5ed47e0517b5baf"}
+headers = {"Authorization": "Bearer c37909d6fa61d88a34a9aa6999cc706739617d40"}
 queryTemplate = queryTemplate.substitute(MYCURSOR=cursor)
 r = requests.post(url, json={'query': queryTemplate}, headers=headers)
 
@@ -84,13 +84,14 @@ AJ_data = json_data['data']['nodes']
 spreadsheet = json_to_dataframe(AJ_data)
 print(spreadsheet)
 final = final.append(spreadsheet, ignore_index=True)
-has_next_page = spreadsheet.iloc[0]['Has Next Page']
-cursor = spreadsheet.iloc[0]['Cursor']
+has_next_page = spreadsheet.iloc[8]['Has Next Page']
+cursor = spreadsheet.iloc[8]['Cursor']
+total_count = spreadsheet.iloc[8]['Total Count']
 
 while has_next_page == True:
   json_query = read_file("GitHub_activity.graphql")
   url = 'https://api.github.com/graphql'
-  headers = {"Authorization": "Bearer 066e495c532454a7a2cabc98d5ed47e0517b5baf"}
+  headers = {"Authorization": "Bearer c37909d6fa61d88a34a9aa6999cc706739617d40"}
   json_query = json_query.replace("$MYCURSOR", f'\"{cursor}\"')
   r = requests.post(url, json={'query': json_query}, headers=headers)
 
@@ -107,9 +108,8 @@ while has_next_page == True:
   print(spreadsheet)
   final = final.append(spreadsheet, ignore_index=True)
   print(final)
-  if len(spreadsheet.index) == 1:
-    has_next_page = spreadsheet.iloc[0]['Has Next Page']
-    cursor = spreadsheet.iloc[0]['Cursor']
-  else:
+  if len(final.index) >= total_count:
     has_next_page = False
-final.to_csv('test_Pandaspreadsheet12.csv')
+  elif len(final.index) <= total_count:
+    cursor = spreadsheet.iloc[8]['Cursor']
+final.to_csv('test_Pandaspreadsheet14.csv')
